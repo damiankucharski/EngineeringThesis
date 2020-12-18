@@ -355,6 +355,30 @@ The project was co-created with Arkadiusz Czerwiński who also ensured that regr
 \item description of existing solutions (also scientific ones, if the problem is scientifically researched), algorithms,  location of the thesis in the scientific domain
 \end{itemize}
 
+As was mentioned in the introduction, Auto-ML library that is subject of this thesis has to do both things - preprocess the data and optimize hyperparameters. Created model should perform classification tasks with high efficiency, measured using metrics such as accuracy and f1-score.
+After training process it should be possible to plot information concerning effectiveness of training and model characteristics explanation.
+All of these problems will be now explained so the solution presented by this thesis will be more understandable.
+
+\subsection{Classification}
+
+The main problem that the solution should solve is so called classification task. Such task consists of predicting fixed class label for given set of data. Classification is most the frequent problem in machine learning use cases and can be performed on any kind of input data. There are two types of classification problems - binary classification and multilabel classification.
+In the first case model, given the data, has to choose one of only two classes, usually representing True/False values or presence/absence of something. Examples include classifying e-mails as spam and not-spam or predicting whether some person has some medical condition or not.
+In the second case there are at least 3 labels, usually predefined, and model has to choose one of them that most likely categorizes data it was presented. Depending on the algorithm used to perform the task, it can be either split into multiple binary classification problems using so-called one-vs-all approach in which for each class individual problem of classifying if given data point belongs to given class of not. However some algorithms allow to perform multilabel classification at one step. Example of such problems is for example famous MNIST classification task, in which given picture of handwritten digit, program has to output what digit is present in the image.
+To illustrate such a problem simple example will be provided. The problem to be solved will be classification of student college acceptance given scores of two tests. Data is presented on the following graph.
+
+\subsection{Decision boundary}
+
+Solving classification task reduces to find so called decision boundary. This term basically means that what has to be found are specific values for which divide the space of all possible values into regions representing specific label. In case of binary classification this space is divided into two regions.
+As can be seen on the figure, high scores from both tests are needed for a student to be accepted.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.75]{college.png}
+    \caption{Example of classification task}
+    \label{fig:mesh1}
+\end{figure}
+
+
 
 
 
