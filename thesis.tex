@@ -381,6 +381,20 @@ As can be seen on the figure, high scores from both tests are needed for a stude
 
 
 
+In case of this dataset there are only two explanatory variables so the problem can be easily visualized. However number of these variables and therefore dimension of he input data is not limited in any way. I general solving classification task means finding N - 1 dimensional hyperplane (in case of 2-dimensional input such a hyperplane is just 1-dimensional line) that seperates datapoints of different classes.
+
+\subsubsection{Linear and Nonlinear Boundaries}
+
+Depending on the model type, decision boundary it generates can be different. The simplest case of decision boundary is linear decision boundary created as linear combination of the input features. Very often however such a model doesn't explain relationships between features and labels very well. In such a case non-linear decision boundary is needed. Different models have different ways to provide such a non-linear boundary. With such a boundaries however the problem of modeling too complex relationships arises, making a model very good at modeling data that was presented to it but failing to model new, unseen data.
+Such a problems are called respectively under-fitting and over-fitting. When model under-fits the data it is said to have high bias. When it over-fits the data it is said to have high variance. The challange of finding model that is complex enough to model the data well without simultaneously modeling noise is called bias-variance trade-off. It will be adressed later along with methods to tackle it. Below figures showing different decision boundaries are presented to illustrate the problem. 
+
+
+\subsection{Logistic Regression}
+
+
+
+
+
 
 \chapter{Requirements and tools}
 
