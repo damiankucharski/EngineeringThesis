@@ -149,7 +149,7 @@ escapeinside={@*}{*@},%
 
 \newcommand{\Author}{Damian Kucharski}
 \newcommand{\Supervisor}{Łukasz Wróbel, PhD}
-\newcommand{\Title}{Gradient Boosting Framework for classification data}
+\newcommand{\Title}{Automated Gradient Boosting Framework for classification data}
 \newcommand{\Polsl}{Silesian University of Technology}
 \newcommand{\Faculty}{Faculty of Automatic Control, Electronics and Computer Science}
 
@@ -359,17 +359,13 @@ As was mentioned in the introduction, Auto-ML library that is subject of this th
 After training process it should be possible to plot information concerning effectiveness of training and model characteristics explanation.
 All of these problems will be now explained so the solution presented by this thesis will be more understandable.
 
-\subsection{Classification}
+\section{Classification problem explanation}
 
 The main problem that the solution should solve is so called classification task. Such task consists of predicting fixed class label for given set of data. Classification is most the frequent problem in machine learning use cases and can be performed on any kind of input data. There are two types of classification problems - binary classification and multilabel classification.
 In the first case model, given the data, has to choose one of only two classes, usually representing True/False values or presence/absence of something. Examples include classifying e-mails as spam and not-spam or predicting whether some person has some medical condition or not.
 In the second case there are at least 3 labels, usually predefined, and model has to choose one of them that most likely categorizes data it was presented. Depending on the algorithm used to perform the task, it can be either split into multiple binary classification problems using so-called one-vs-all approach in which for each class individual problem of classifying if given data point belongs to given class of not. However some algorithms allow to perform multilabel classification at one step. Example of such problems is for example famous MNIST classification task, in which given picture of handwritten digit, program has to output what digit is present in the image.
 To illustrate such a problem simple example will be provided. The problem to be solved will be classification of student college acceptance given scores of two tests. Data is presented on the following graph.
 
-\subsection{Decision boundary}
-
-Solving classification task reduces to find so called decision boundary. This term basically means that what has to be found are specific values for which divide the space of all possible values into regions representing specific label. In case of binary classification this space is divided into two regions.
-As can be seen on the figure, high scores from both tests are needed for a student to be accepted.
 
 \begin{figure}[h]
     \centering
@@ -379,21 +375,74 @@ As can be seen on the figure, high scores from both tests are needed for a stude
 \end{figure}
 
 
+\subsection{Bias and Variance}
+
+There are two important concepts that are necessary be known to understand what the whole model optimization, model selection, data processing and others are about. They are called \emph{Bias} and \emph{Variance} and in a way they measure quality of the model.
+The model is said to have high bias if it is too simple to reproduce the relationships that are present in the data. Such a model is inherently incapable of representing them and therefore is highly biased. It is also often said that the model \emph{under-fits} the data. On the other side there are model that have high variance. This situation occurs when model is too complex and in a way "tries to hard" to model relationships it sees in the data. Such a model may learn to make perfect predictions for the data it has seen but it would most likely completely fail to do it with the new data. It therefore has high variance because the relationships it models highly vary depending on the specific set of data points that was presented to it during training process. Such a model is often said to \emph{over-fit} the data.
+Ideally the model should have low bias and low variance but it is often impossible because when when decreases another increases. The task then is too find good middle-ground and the problem just referenced is often named \emph{Bias-Variance Tradeoff}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=1.5]{overfitting_2.png}
+    \caption{Example of underfitting and overfitting}
+    \label{fig:mesh1}
+\end{figure}
+
+https://www.geeksforgeeks.org/underfitting-and-overfitting-in-machine-learning/
+
+\subsection{Classifiers}
 
 
-In case of this dataset there are only two explanatory variables so the problem can be easily visualized. However number of these variables and therefore dimension of he input data is not limited in any way. I general solving classification task means finding N - 1 dimensional hyperplane (in case of 2-dimensional input such a hyperplane is just 1-dimensional line) that seperates datapoints of different classes.
 
-\subsubsection{Linear and Nonlinear Boundaries}
-
-Depending on the model type, decision boundary it generates can be different. The simplest case of decision boundary is linear decision boundary created as linear combination of the input features. Very often however such a model doesn't explain relationships between features and labels very well. In such a case non-linear decision boundary is needed. Different models have different ways to provide such a non-linear boundary. With such a boundaries however the problem of modeling too complex relationships arises, making a model very good at modeling data that was presented to it but failing to model new, unseen data.
-Such a problems are called respectively under-fitting and over-fitting. When model under-fits the data it is said to have high bias. When it over-fits the data it is said to have high variance. The challange of finding model that is complex enough to model the data well without simultaneously modeling noise is called bias-variance trade-off. It will be adressed later along with methods to tackle it. Below figures showing different decision boundaries are presented to illustrate the problem. 
+\subsection{Tree based methods and gradient boosting}
 
 
-\subsection{Logistic Regression}
+\subsection{Existing implementations}
 
+
+\subsection{Why gradient boosting?}
 
 
 
+\section{Data preprocessing}
+
+Before classification model can be trained, often the necessary step is to firstly preprocess it. Term preprocessing means performing transformations of the data such that machine learning model of our choice can actually interpret and learn from it. Some of the most important will be now discused.
+
+\subsection{Missing value treatment}
+
+Datasets are often incomplete. There are many reasons for that. Depending on the nature of the data, or the process that generated it, the cause for that may be different. There are many ways this problem can be addressed and different approaches are suitable in different situations.
+There are three main ways missing values can be handled. First one is just throwing away part of the data that is missing. It can be done in one of the two ways. First is often used when some feature has mostly missing values. In such a situation one can just delete it entirely from dataset. The other situation is often practised when there is not many of missing values of some feature. In such a situation the entries with undefined value for the feature can be deleted. This approach however deletes some potentially important information given by other features.
+Another way to treat missing values is to impute them. Imputing means setting them to some values. Most popular approaches include for example setting them to most frequent value for the feature, or if the values are numerical - to mean or median. This approaches however can increase the bias in the data, especially if percentage of missing values is high. 
+The are also some more complicated and smarter ways of imputing values like Iterative Imputation, KNN Imputation or SMOTE[DODAĆ LINKI]. However their mechanisms of work will are out of scope of this thesis.
+What is important however is that each of these methods, simple or not, have its advantages and disadvantages and choosing right one is more often matter of experimenting rather than anything else.
+The last method that will be discussed here is missing values encoding. This is the easiest method and it also is very effective in many cases. If the feature having missing values is nominal, or in other words, categorical what can be done is introducing new class indicating that value is missing. In such a scenario if there is binary "sick" feature in the dataset the category of "not known" can be added thus making the feature taking three possible values instead of two. If the data is numerical missing values can be set to zero and additional binary feature called indicator variable can be added to dataset, telling if there was a missing value in given entry for the feature or not.
+
+\subsection{Feature encoding}
+
+Another necessary step for most of the cases is so called feature encoding. While humans are capable of processing words computers are not. Because of that every feature in our dataset that is represented in for of the text has to be encoded somehow - which basically means represented by numbers.
+There are many ways to do it - again the correct method depends on the data and it's nature. 
+In this thesis only some of them with limited explanations will be covered as the topic is very broad.
+The most natural way is to just assign a fixed number for each different value the feature can take. For example if the "sick" variable could take values "YES" and "NO" then they could just be assigned to "1" and "0" respectively. This approach however very often is wrong. The problem arises when the number of possible values the feature can take is bigger than two. Encoding them in such a way in this case often could mean creating artifical order that does not exist but model would interpret the data in the way that it does exist. For example if there would be "color" feauture in the data taking values "RED", "GREEN" and "BLUE" encoding them to "0", "1" and "2" would create false relationship of BLUE being somehow more different, or "bigger" in respect to "RED" than "GREEN" is.
+In such a case most often used method is so called one-hot encoding. 
+The method consists of replacing given feature with n indicator variables for each possible value of the feature. What is important however that in case of such encoding the problem known as perfect multicollinearity [https://en.wikipedia.org/wiki/Multicollinearity] arises. It can be easly solved however by just discarding one of the created indicator variables. This approach potentially can greatly increase number of features in dataset and potentially cause other problems.
+Last method that will be covered here is target encoding where the values are set to average of the target value for given category. This approach is easy to implement and often gives good results but increase the risk of overfitting to the training data.
+
+\subsection{Outlier treatment}
+
+The last important topic that needs to be addressed is outlier treatment. It is often the case that the dataset will contain entries that 
+
+
+\subsection{Other data processing steps}
+
+\section{Model optimization}
+
+\subsection{Cross-Validation}
+
+\subsection{Grid and Randomized Search}
+
+\subsection{Bayesian Optimization}
+
+\section{Existing Auto-ML tools}
 
 
 \chapter{Requirements and tools}
