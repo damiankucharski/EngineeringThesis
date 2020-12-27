@@ -377,9 +377,9 @@ To illustrate such a problem simple example will be provided. The problem to be 
 
 \subsection{Bias and Variance}
 
-There are two important concepts that are necessary be known to understand what the whole model optimization, model selection, data processing and others are about. They are called \emph{Bias} and \emph{Variance} and in a way they measure quality of the model.
+There are two important concepts that are necessary to be known to understand what the whole model optimization, model selection, data processing and others are about. They are called \emph{Bias} and \emph{Variance} and in a way they measure quality of the model.
 The model is said to have high bias if it is too simple to reproduce the relationships that are present in the data. Such a model is inherently incapable of representing them and therefore is highly biased. It is also often said that the model \emph{under-fits} the data. On the other side there are model that have high variance. This situation occurs when model is too complex and in a way "tries to hard" to model relationships it sees in the data. Such a model may learn to make perfect predictions for the data it has seen but it would most likely completely fail to do it with the new data. It therefore has high variance because the relationships it models highly vary depending on the specific set of data points that was presented to it during training process. Such a model is often said to \emph{over-fit} the data.
-Ideally the model should have low bias and low variance but it is often impossible because when when decreases another increases. The task then is too find good middle-ground and the problem just referenced is often named \emph{Bias-Variance Tradeoff}
+Ideally the model should have low bias and low variance but it is often impossible because when one decreases another increases. The task then is to find good middle-ground and the problem just referenced is often named \emph{Bias-Variance Tradeoff}
 
 \begin{figure}[h]
     \centering
@@ -390,18 +390,66 @@ Ideally the model should have low bias and low variance but it is often impossib
 
 https://www.geeksforgeeks.org/underfitting-and-overfitting-in-machine-learning/
 
-\subsection{Classifiers}
+\subsection{Classifiers, tree based methods and gradient boosting}
+
+There are many machine learning models that are suitable use for classification tasks. First there are simple ones like logistic regression. This model tries to fit the line, or in case of problem located in higher dimensions - hyperplane, that seperates classes. Then there are more complicated models like support vector machines. These were state-of-art for long time until deep learning happened. Such a model tries to find a boundary that guarantees the biggest margin, in linear algebra sense, between classes. With the use of so called kernel trick and functions known as kernels it can achieve impressive results. Then recently the deep learning era emerged and models known as neural networks became the the best in many application, they however usually require big amounts of data to achieve good results.
+In this thesis however tree-based models were chosen to be the base of the solution. They have some qualities that make them especially good choice for tackling the problem and some of these qualities as well as some theory of how the models work will be shortly explained.
+
+\subsubsection{Decision Tree and Gradient Boosting}
+
+Decision tree is a simple model trying to learn simple decision rules inferred from the training data. Such rules can be easily visualized as a series of if-else statements. These behavior can be achieved with different methods however what each of them tries to do is finding optimal splits - so decisions - that explain differences between samples. The sequence of such rules create a tree structure that can be easily interpreted.
 
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.4]{decision_tree.png}
+    \caption{Visualization of decision tree}
+    \source{Source: https://cutt.ly/hh7jmin}
+    \label{fig:mesh1}
+\end{figure}
 
-\subsection{Tree based methods and gradient boosting}
+To achieve better performance of the machine learning model there is a possibility to use a method called ensembling. Ensembling means training multiple machine learning models and then combining their predictions to get final result. This approach often gives better results than using these models separately. 
+One of the approaches that are based on the idea of ensembling is gradient boosting.
+It works by creating many so-called weak learners and sequentially training them based on the results they give. Most often used components of such a method are small decisions trees. Such a trees are constrained on their maximum depth - so in other words the number of decisions (or splits) they can make. 
+Because of that none of them can fit the data well but also it's impossible to overfit with such a model.
+Then after creating the tree it's error is measured and knowing that error and particular samples that model got especially wrong - next tree tries to act on this error and correct it. This way every single model tries to "boost" aggregate complexity of the ensemble. Such a process is repeated n times, where n is a hyperparameter. For every dataset the optimal number of trees in ensemble may be different and therefor should be optimized by experiments or other methods that will be described later and that are the core of the framework.  
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.75]{boosting.png}
+    \caption{Boosting algorithm}
+    \source{Source: https://cutt.ly/xh7vqXf}
+    \label{fig:mesh1}
+\end{figure}
 
 \subsection{Existing implementations}
 
+\subsubsection{XGBoost}
+
+XGBoost is the most known library providing gradient boosting solutions. It was firstly created by Tianqi Chen and then continued by other creators. It is available for most popular operating systems - Windows, Linux and MacOS. It's implementations can be seen in many programming languages, commonly used in field of data science and machine learning. Namely Python, C++, Julia, Java, Perl and Scala support XGBoost. 
+The things that make it different from other frameworks are  for example
+
+\begin{itemize}
+\item Clever penalization of trees
+\item A proportional shrinking of leaf nodes
+\item Newton Boosting
+\item Extra randomization parameter
+\item Implementation on single, distributed systems and out-of-core computation
+\end{itemize}
+
+
+\subsubsection{LightGBM}
+
+Second framework is called LighXBM and as the name suggests it's main goal is to be fast and lightweight. Thanks to that it can be used on not so powerful machines that do not posses great computing powers and big volumes of memory. While firstly created b Guolin Ke it was later incorporated as a Microsofts project. It's approach to growing the decisions trees is also different that of most of its competitors - growing trees leaf-wise instead of tree-level-wise. It assumes that this approach usually yield the largest decrease in loss. Thanks to all these traits this library is very versatile and can be used almost anywhere and also it is great for quick prototyping and experimenting. 
+
+\subsubsection{CatBoost}
+
+Another framework is CatBoost. It is newer than the former as it was first launched at the middle of the year 2017. While not that popular as other solutions it is certainly very interesting and powerful. It is successfully used in such applications as recommender systems, personal assistants, self-driving cars, weather prediction and others. What is most remarkable in it is that it support GPU computing which greatly enhances the speed of training and also enables possibility for creating more complex models on more complex data. It also has built in visualization tools that make it easy to understand some insights that can be drawn from the training process and also to make tuning the algorithm easier. It also natively supports some preprocessing features like encoding categorical variables and missing values.
 
 \subsection{Why gradient boosting?}
 
+The choice of gradient boosting instead of other popular classification methods is not an accident. It has the most important traits for the auto-ml solution. It has proven to be effective many times. Kaggle platform which is a place where machine learning specialists can participate in data science and machine learning competitions has a long record of gradient boosting and especially XGBoost being a primary tool that made winners winners. 
+It being tree-based also helps in model explainability which helps in turn optimization procedure. The fact that the model can then be interpreted by human more easily makes Auto-ML solutions more suitable for further improvements as it is easier to understand models drawbacks and fix them.
 
 
 \section{Data preprocessing}
@@ -429,18 +477,51 @@ Last method that will be covered here is target encoding where the values are se
 
 \subsection{Outlier treatment}
 
-The last important topic that needs to be addressed is outlier treatment. It is often the case that the dataset will contain entries that 
+The last important topic that needs to be addressed is outlier treatment. It is often the case that the dataset will contain entries that differ significantly from other observations. Such a big difference can happen in features, target or both. It is often hard to tell what is the cause of its existence, it may be error of measurement or some actual important cause. What is important is that some models are very sensitive to outliers and tree-based methods are one of them. Trying to account for outliers can reduce performance of the model on majority of observations. Therefore outliers need special treatment.
+As with missing values we can delete them or impute them if it seems reasonable. This however deletes the information the can be carried by outlier. If it is assumed that outlier may be natural it can also be treated seperately as whole different problem, by new model that can then be combined with the model for "usual" observations to achieve better results.
+There are many methods for determining whether an observation is outlier or not, most of them are based on statistical methods like computing z-scores of observations. 
+Finding and treating outliers correctly can be big part of the model working well or bad and thus it should never be omitted, especially in cases when machine learning model is sensitive to them.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=1]{outlier.jpg}
+    \caption{Linear regression is a model sensitive to outliers.}
+    \label{fig:mesh1}
+\end{figure}
+
+
+https://www.theanalysisfactor.com/outliers-to-drop-or-not-to-drop/
 
 
 \subsection{Other data processing steps}
 
+There are also other things that can be done with data to increase model performance. Some algorithms benefit from scaling and transforming numerical values so that they fall in specific range or follow specific distribution. Sometimes new variables can be created on the base of others. This process named feature engineering requires some creativity and often also domain knowledge. Sometimes artificially creating more observations can help, this process is called data augmentation. It is hard if possible at all to name all things that can be tried and that potentially can help. Experimenting and getting experience is good chunk of knowing what to do, but the before mentioned steps are most necessary to make model work at all and are the challenge that the solution implemented as the subject of this thesis is concentrated to solve.
+
+
 \section{Model optimization}
+
+After preprocessing procedure model can be trained. Most of the algorithms do have some default settings. Ones used in this thesis are not exception. However as was stated many times before the process of model optimization doesn't end in optimization of its parameters. Before the model is trained it has to be set up to work in specific way and this settings called hyperparameters also have to be optimized. Gradient boosting models while powerful are rather difficult to optimize in terms of their settings. That's why most people just stay with default parameters or try and fail with changing them.
+That's why the auto-ml solution that is being proposed in this thesis heavily focuses on automating this process.
 
 \subsection{Cross-Validation}
 
+To tune model hyper parameters some way to measure how well model is trained has to be set up. What is important in creating good predictive model is to make it perform well not only on the data it is being trained on but also on the data it is yet to be used on.
+Because of that different methods for testing models performance were proposed. The one of the most used that is also the method chosen here is called cross-validation.
+It consists of splitting training dataset to k folds. Parameter has to be specified by the user but in practice 5 fold are mainly used. Each fold consists of 1/k of the datasets entries. Then the set is splitted to train and test sets k times. For each iteration one of the k folds is chosen to be test set and all other together make training set. 
+The model is then trained on the training set and its performance is measured on the testing set using specified metric.
+There are different metrics that can be used to determine the quality of the classification model, most commonly accuracy is used as a metric which is basically the fraction of all examples that were classified correctly.
+Sometimes the dataset is highly imbalanced and most of the observations fall to one class, while others appear rather rarely. In such a case most commonly used metrics include balanced accuracy score and F1 score.
+WHen the training and testing process is performed k times the results are averaged and the performance is noted.
+Knowing that performance it is then possible to try different approaches to data processing or hyperparameter choice. Repeatedly experimenting with these different approaches and measuring quality of the result using cross-validation is a good way to build great machine learning models.
+
 \subsection{Grid and Randomized Search}
 
+To optimize hyperparameters of the model one can choose different approaches. The most commonly used are naive approaches like Grid Search and Randomized Search.
+These approaches are very similar and at first require the user to specify all values that they want to be tested. That's the first drawback of the method as it is easy to miss some possibly good options. It also enforces user to at least partially know what values may be a good fit.
+
 \subsection{Bayesian Optimization}
+
+
 
 \section{Existing Auto-ML tools}
 
