@@ -25,7 +25,15 @@
 
 \usepackage{setspace}
 \onehalfspacing
-
+\usepackage{caption}
+\DeclareCaptionFormat{citation}{%
+   \ifx\captioncitation\relax\relax\else
+     \captioncitation\par
+   \fi
+   #1#2#3\par}
+\newcommand*\setcaptioncitation[1]{\def\captioncitation{\textit{Source:}~#1}}
+\let\captioncitation\relax
+\captionsetup{format=citation,justification=centering}
 
 \frenchspacing
 
@@ -322,8 +330,8 @@ Gliwice, dnia {\selectlanguage{polish}\today}
 ------------------------------
 \newline
 The roots of artificial intelligence and machine learning appear quite early in history, one of earliest examples could be introduction of Bayes Theorem at 1700s, followed by regression analysis at 1800s. The field constantly evolved, but it got much more attention pretty recently when computational possibilities expanded enough for big data to be processed and more complex algorithms (like neural networks) to be used.
-The thing that at first was called inferential statistics, data mining and recently data science and machine learning has application in almost any field imaginable. Tools such as spam filters, chatbots, web search results, analysis of medical imaging, reconstruction of images, text generation and autocompletion, robotics, video and board games, logistic processes optimization and much more - they all benefit from intelligent solutions that are built into them.
-Machines are able to exceed performance of humans in many critical fields, well trained machine learning model can analyse MRI imaging as well as radiologist with 20 years of experience. Very recently, at November 2020, company called OpenAI, known for creation of AlphaZero - best chess playing program and AlphaGo - first ever program to beat human in the ancient chineese game of Go, has created program called AlphaFold2. It solves task of so called protein folding, a 50-year-old grand challenge in biology, with tremendous 90 percent accuracy, exceeding performance of its first version from 2 years before by over 30 percent. This work by some is named the biggest accomplishment of artificial intelligence studies and is predicted to be crucial part to next great discoveries in medical and biology fields. Some applications, such as the evolutionary analysis of proteins, are set to flourish because the tsunami of available genomic data might now be reliably translated into structures. This can for example help to prevent such events like covid-19 pandemic and help to find cure for many diseases whose mechanisms are not yet well understood.
+The thing that at first was called inferential statistics, data mining and recently data science and machine learning has application in almost any field imaginable. Tools such as spam filters, chat bots, web search results, analysis of medical imaging, reconstruction of images, text generation and auto completion, robotics, video and board games, logistic processes optimization and much more -- they all benefit from intelligent solutions that are built into them.
+Machines are able to exceed performance of humans in many critical fields, well trained machine learning model can analyse mammography imaging as well or better than experienced radiologist\cite{inproceedings}. Very recently, at November 2020, company called OpenAI, known for creation of AlphaZero\cite{silver2017mastering} - best chess playing program and AlphaGo\cite{alpha_go} - first ever program to beat human in the ancient Chinese game of Go, has created program called AlphaFold2\cite{alpha_fold}. It solves task of so called protein folding, a 50-year-old grand challenge in biology, with tremendous 90 percent accuracy, exceeding performance of its first version from 2 years before by over 30 percent. This work by some is named the biggest accomplishment of artificial intelligence studies and is predicted to be crucial part to next great discoveries in medical and biology fields. Some applications, such as the evolutionary analysis of proteins, are set to flourish because the tsunami of available genomic data might now be reliably translated into structures. This can for example help to prevent such events like covid-19 pandemic and help to find cure for many diseases whose mechanisms are not yet well understood.
 \newline
 Occurances like that show two things. First - that the field of machine learning and artificial intelligence has and will have great impact on the world, and second - that the advancements in this field are very far from slowing down, in fact before mentioned AlphaFold and other novel machine learning models like transformers that pushed natural language modeling to the whole new level are the best evidence that the opposite is happening - this growth is speeding up.
 \newline
@@ -331,29 +339,22 @@ However with new ideas, growth of the availability of data and processing power,
 \item The quality and prepossessing of the data, feature engineering
 \item Choosing right model and its hyperparameters.
 
-Because of the reason of growing complexity of the modeling task the idea of automatic solution arose and is mostly referred to as Auto Modeling, Auto Machine Learning or just Auto-ML. Such a solution should automate at least one part of modeling pipeline, it means that it should either preprocess data for modeling purposes, select right model and optimize it's hyperparameter choices, or to do both.
+Because of the reason of growing complexity of the modeling task the idea of automatic solution arose and is mostly referred to as Auto Modeling, Auto Machine Learning or just Auto-ML. Such a solution should automate at least one part of modeling pipeline, it means that it should either preprocess data for modeling purposes, select right model and optimize it's hyper-parameter choices, or to do both.
 Such a solution gives good baseline and push to the right direction, saving time otherwise spent for experiments that are destined to fail. In short words, Auto-ML is the idea to incorporate machine learning to create machine learning models. It is still rather new field, however it already gives promising results and likely in short amount of time it will completely replace big chunk of traditional work performed by data scientists and other practitioner in the field, just as spreadsheets replaced need for manual calculation on the paper for most of the use cases.
 \newline
 There are many approaches to solving such a problem, especially in terms of optimizing for model choice. 
-Usually the hardest part of the task it to optimize hyperparameters. Most of them are different for each model type and while their optimal choice is crucial for good modeling of given data they can't be directly learned from it. Let's analyze simple example of probabilistic model that decides whether a person will be accepted to college given results of maths and physics test. Example of hyperparameter for such a model could be for example the way it measures its error which is often named cost function, or objective function. It cannot be optimized during model training as it is by itself used to optimize the model. It has to be selected beforehand and is constant for whole optimization procedure.
-Another example of hyper parameter is not directly model specific but necessary for the model to learn - namely optimization method. What is important is that this method by itself can have it's own hyperparameters. More details on different hyper parameters will be explored later in the work but for now what is important is that the more complex the model is, the more hyper parameters which usually means much harder procedure of finding their optimal values.
+Usually the hardest part of the task it to optimize hyper-parameters. Most of them are different for each model type and while their optimal choice is crucial for good modeling of given data they can't be directly learned from it. For example for the \emph{k nearest neighbours algorithm} first the number $k$ of neighbours have to be specified. For tree based models maximal depth of the tree has to be provided. Almost every algorithm has its specific hyper-parameters. 
+Another example of hyper parameter is not directly model specific but necessary for the model to learn - namely optimization method. What is important is that this method by itself can have it's own hyper-parameters. More details on different hyper parameters will be explored later in the work but for now what is important is that the more complex the model is, the more hyper parameters, which usually means much harder procedure of finding their optimal values.
 \newline
-The objective of this thesis is development of Auto-ML functionality in form of python library. It covers both data processing and model selection. Models built by it are based on gradient boosted trees algorithms that are optimized using users method of choice, implemented inside library. Namely, grid search and Bayesian optimization are supported. Apart from that, web based application was developed that can be accessed using internet or run on ones own machine. It allows for training model and viewing visualizations summarizing training and explaining models decisions. As with growing complexity of modern machine learning algorithms it is increasingly hard to understand their decisions and it is very common to just treat them as black box. However good understanding of model inner workings has proved in the past to be crucial in further enhancement of its performance. Good example can be paper "Visualizing and Understanding Convolutional Networks" (Trzeba to jakoś ładnie zacytować)[https://arxiv.org/abs/1311.2901] by Matthew D Zeiler et. al. This study analyzed winning convolutional neural network architecture of previous ImageNet competition. In result the next iteration of this competition has been won by this team of researchers.
+The objective of this thesis is development of Auto-ML functionality in form of python library. It should cover both data processing and model selection. Models built by it are based on gradient boosted trees algorithms that are optimized using users method of choice, implemented inside library. Namely, grid search and Bayesian optimization are supported. Apart from that, web based application was developed that can be accessed using internet or run on ones own machine. It allows for training model and viewing visualizations summarizing training and explaining models decisions. As with growing complexity of modern machine learning algorithms it is increasingly hard to understand their decisions and it is very common to just treat them as black box. However good understanding of model inner workings has proved in the past to be crucial in further enhancement of its performance. Good example can be paper "Visualizing and Understanding Convolutional Networks"\cite{VisNeuralNet} by Matthew D Zeiler et. al. This study analyzed winning convolutional neural network architecture of previous ImageNet competition. In result the next iteration of this competition has been won by this team of researchers.
 Because of that software prepared to accompany this work has been designed to offer tools that make it easy to understand how model actually works to  make further research and domain knowledge application as simple as possible.
 The library also offers lower level interface, that gives possibility to quickly ensemble machine learning pipelines for programmers without sacrificing complexity of it. Because of that it is much simpler to perform repetitive, standard tasks in data processing and modeling, at the same time enhancing simplicity and readability of the code. Hyperparametrs of such models can be then optimized with before mentioned methods.
-The project was co-created with Arkadiusz Czerwiński who also ensured that regression tasks are well covered, whilst my scope was to prepare library for handling classification problems. Most of the work however was done in collaboration as big chunk of whole code was needed to handle both of use cases.
+The project was co-created with Arkadiusz Czerwiński who also ensured that regression tasks are well covered, whilst my scope was to prepare library for handling classification problems. Most of the work however was done in collaboration as big chunk of whole code was needed to handle both of use cases. The following chapters will analyse the classification problem, model selection and hyper-parameter search, along with description on methods that are used to solve them. Then the proposed solution will be presented along with experiments, results and conclusions.
 
 
 \end{itemize}
 
 \chapter{[Problem analysis]}
-
-\begin{itemize}
-\item  problem analysis
-\item state of the art, problem statement
-\item  literature research (all sources in the thesis have to be referenced \cite{bib:article,bib:book,bib:conference,bib:internet})
-\item description of existing solutions (also scientific ones, if the problem is scientifically researched), algorithms,  location of the thesis in the scientific domain
-\end{itemize}
 
 As was mentioned in the introduction, Auto-ML library that is subject of this thesis has to do both things - preprocess the data and optimize hyperparameters. Created model should perform classification tasks with high efficiency, measured using metrics such as accuracy and f1-score.
 After training process it should be possible to plot information concerning effectiveness of training and model characteristics explanation.
@@ -361,90 +362,80 @@ All of these problems will be now explained so the solution presented by this th
 
 \section{Classification problem explanation}
 
-The main problem that the solution should solve is so called classification task. Such task consists of predicting fixed class label for given set of data. Classification is most the frequent problem in machine learning use cases and can be performed on any kind of input data. There are two types of classification problems - binary classification and multilabel classification.
+The main problem that the solution should solve is so called classification task. Such task consists of predicting fixed class label for given set of data. Classification is the most frequent problem in machine learning use cases. There are two types of classification problems - binary classification and multilabel classification.
 In the first case model, given the data, has to choose one of only two classes, usually representing True/False values or presence/absence of something. Examples include classifying e-mails as spam and not-spam or predicting whether some person has some medical condition or not.
-In the second case there are at least 3 labels, usually predefined, and model has to choose one of them that most likely categorizes data it was presented. Depending on the algorithm used to perform the task, it can be either split into multiple binary classification problems using so-called one-vs-all approach in which for each class individual problem of classifying if given data point belongs to given class of not. However some algorithms allow to perform multilabel classification at one step. Example of such problems is for example famous MNIST classification task, in which given picture of handwritten digit, program has to output what digit is present in the image.
-To illustrate such a problem simple example will be provided. The problem to be solved will be classification of student college acceptance given scores of two tests. Data is presented on the following graph.
+In the second case there are at least 3 labels, usually predefined, and model has to choose one of them that most likely categorizes data it was presented. Depending on the algorithm used to perform the task, it can be either split into multiple binary classification problems using so-called one-vs-all approach in which for each class individual problem of classifying if given data point belongs to given class of not. However some algorithms allow to perform multilabel classification at one step. Example of such problems is for example famous MNIST\cite{deng2012mnist} classification task, in which given picture of handwritten digit, program has to output what digit is present in the image.
+To illustrate such a problem simple example will be provided. The problem to be solved will be classification of student college acceptance given scores of two tests. Data is presented on the figure \ref{fig:class_task}.
 
 
 \begin{figure}[h]
     \centering
     \includegraphics[scale=0.75]{college.png}
     \caption{Example of classification task}
-    \label{fig:mesh1}
+    \label{fig:class_task}
 \end{figure}
 
 
 \subsection{Bias and Variance}
 
 There are two important concepts that are necessary to be known to understand what the whole model optimization, model selection, data processing and others are about. They are called \emph{Bias} and \emph{Variance} and in a way they measure quality of the model.
-The model is said to have high bias if it is too simple to reproduce the relationships that are present in the data. Such a model is inherently incapable of representing them and therefore is highly biased. It is also often said that the model \emph{under-fits} the data. On the other side there are model that have high variance. This situation occurs when model is too complex and in a way "tries to hard" to model relationships it sees in the data. Such a model may learn to make perfect predictions for the data it has seen but it would most likely completely fail to do it with the new data. It therefore has high variance because the relationships it models highly vary depending on the specific set of data points that was presented to it during training process. Such a model is often said to \emph{over-fit} the data.
-Ideally the model should have low bias and low variance but it is often impossible because when one decreases another increases. The task then is to find good middle-ground and the problem just referenced is often named \emph{Bias-Variance Tradeoff}
+The model is said to have high bias if it is too simple to reproduce the relationships that are present in the data. Such a model is inherently incapable of representing them and therefore is highly biased. It is also often said that the model \emph{under-fits} the data. On the other side there are model that have high variance. This situation occurs when model is too complex and  tries too hard to model relationships it sees in the data. Such a model may learn to make perfect predictions for the data it has seen but it would most likely completely fail to do it with the new data. It therefore has high variance because the relationships it models highly vary depending on the specific set of data points that was presented to it during training process. Such a model is often said to \emph{over-fit} the data.
+Ideally the model should have low bias and low variance but it is often impossible because when one decreases another increases. The task then is to find good middle-ground and the problem just referenced is often named \emph{Bias-Variance Tradeoff}. Examples of well and purely fitted models can be seen on the figure \ref{fitting}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[scale=1.5]{overfitting_2.png}
-    \caption{Example of underfitting and overfitting}
-    \label{fig:mesh1}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[scale=1.5]{overfitting_2.png}
+  \setcaptioncitation{\url{https://cutt.ly/4jaUM7Y}}
+  \caption{Example of underfitting and overfitting}
+  \label{fitting}
 \end{figure}
-
-https://www.geeksforgeeks.org/underfitting-and-overfitting-in-machine-learning/
 
 \subsection{Classifiers, tree based methods and gradient boosting}
 
-There are many machine learning models that are suitable use for classification tasks. First there are simple ones like logistic regression. This model tries to fit the line, or in case of problem located in higher dimensions - hyperplane, that seperates classes. Then there are more complicated models like support vector machines. These were state-of-art for long time until deep learning happened. Such a model tries to find a boundary that guarantees the biggest margin, in linear algebra sense, between classes. With the use of so called kernel trick and functions known as kernels it can achieve impressive results. Then recently the deep learning era emerged and models known as neural networks became the the best in many application, they however usually require big amounts of data to achieve good results.
-In this thesis however tree-based models were chosen to be the base of the solution. They have some qualities that make them especially good choice for tackling the problem and some of these qualities as well as some theory of how the models work will be shortly explained.
+There are many machine learning models that are suitable use for classification tasks. First there are simple ones like logistic regression\cite{wright1995logistic}. This model tries to fit the line, or in case of problem located in higher dimensions - hyperplane, that seperates classes. Then there are more complicated models like support vector machines \cite{noble2006support}. These were state-of-art for long time until deep learning\cite{goodfellow2016deep} happened. Such a model tries to find a boundary that guarantees the biggest margin, in linear algebra sense, between classes. With the use of so called kernel trick and functions known as kernels it can achieve impressive results. Then recently the deep learning era emerged and models known as neural networks became the the best in many application, they however usually require big amounts of data to achieve good results.
+In this thesis however tree-based models\cite{buntine1992learning} were chosen to be the base of the solution. They have some qualities that make them especially good choice for tackling the problem and some of these qualities as well as some theory of how the models work will be shortly explained.
 
 \subsubsection{Decision Tree and Gradient Boosting}
 
-Decision tree is a simple model trying to learn simple decision rules inferred from the training data. Such rules can be easily visualized as a series of if-else statements. These behavior can be achieved with different methods however what each of them tries to do is finding optimal splits - so decisions - that explain differences between samples. The sequence of such rules create a tree structure that can be easily interpreted.
+Decision tree is a simple model trying to learn simple decision rules inferred from the training data. Such rules can be easily visualized as a series of if-else statements. These behavior can be achieved with different methods however what each of them tries to do is finding optimal splits - so decisions - that explain differences between samples. The sequence of such rules create a tree structure that can be easily interpreted. Example of such a decision tree can be found at figure \ref{fig:tree}.
 
-
-\begin{figure}[h]
-    \centering
-    \includegraphics[scale=0.4]{decision_tree.png}
-    \caption{Visualization of decision tree}
-    \source{Source: https://cutt.ly/hh7jmin}
-    \label{fig:mesh1}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[scale=0.4]{decision_tree.png}
+  \setcaptioncitation{\url{https://cutt.ly/hh7jmin}}
+  \caption{Visualization of decision tree}
+  \label{fig:tree}
 \end{figure}
+
 
 To achieve better performance of the machine learning model there is a possibility to use a method called ensembling. Ensembling means training multiple machine learning models and then combining their predictions to get final result. This approach often gives better results than using these models separately. 
 One of the approaches that are based on the idea of ensembling is gradient boosting.
 It works by creating many so-called weak learners and sequentially training them based on the results they give. Most often used components of such a method are small decisions trees. Such a trees are constrained on their maximum depth - so in other words the number of decisions (or splits) they can make. 
 Because of that none of them can fit the data well but also it's impossible to overfit with such a model.
-Then after creating the tree it's error is measured and knowing that error and particular samples that model got especially wrong - next tree tries to act on this error and correct it. This way every single model tries to "boost" aggregate complexity of the ensemble. Such a process is repeated n times, where n is a hyperparameter. For every dataset the optimal number of trees in ensemble may be different and therefor should be optimized by experiments or other methods that will be described later and that are the core of the framework.  
+Then after creating the tree it's error is measured and knowing that error and particular samples that model got especially wrong - next tree tries to act on this error and correct it. This way every single model tries to "boost" aggregate complexity of the ensemble. Such a process is repeated n times, where n is a hyperparameter. For every dataset the optimal number of trees in ensemble may be different and therefor should be optimized by experiments or other methods that will be described later and that are the core of the framework. This process is visualized in the figure \ref{fig:boosting}  
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[scale=0.75]{boosting.png}
+    \setcaptioncitation{\url{https://cutt.ly/ijfUC4m}}
     \caption{Boosting algorithm}
-    \source{Source: https://cutt.ly/xh7vqXf}
-    \label{fig:mesh1}
+    \label{fig:boosting}
 \end{figure}
 
 \subsection{Existing implementations}
 
 \subsubsection{XGBoost}
 
-XGBoost is the most known library providing gradient boosting solutions. It was firstly created by Tianqi Chen and then continued by other creators. It is available for most popular operating systems - Windows, Linux and MacOS. It's implementations can be seen in many programming languages, commonly used in field of data science and machine learning. Namely Python, C++, Julia, Java, Perl and Scala support XGBoost. 
-The things that make it different from other frameworks are  for example
-
-\begin{itemize}
-\item Clever penalization of trees
-\item A proportional shrinking of leaf nodes
-\item Newton Boosting
-\item Extra randomization parameter
-\item Implementation on single, distributed systems and out-of-core computation
-\end{itemize}
+XGBoost\cite{chen2016xgboost} is the most known library providing gradient boosting solutions. It was firstly created by Tianqi Chen and then continued by other creators. It is available for most popular operating systems - Windows, Linux and MacOS. It's implementations can be seen in many programming languages, commonly used in field of data science and machine learning. Namely Python, C++, Julia, Java, Perl and Scala support XGBoost. It is known for consistently good results and reasonable run time of training.
 
 
 \subsubsection{LightGBM}
 
-Second framework is called LighXBM and as the name suggests it's main goal is to be fast and lightweight. Thanks to that it can be used on not so powerful machines that do not posses great computing powers and big volumes of memory. While firstly created b Guolin Ke it was later incorporated as a Microsofts project. It's approach to growing the decisions trees is also different that of most of its competitors - growing trees leaf-wise instead of tree-level-wise. It assumes that this approach usually yield the largest decrease in loss. Thanks to all these traits this library is very versatile and can be used almost anywhere and also it is great for quick prototyping and experimenting. 
+Second framework is called LightGBM\cite{ke2017lightgbm} and as the name suggests it's main goal is to be fast and lightweight. Thanks to that it can be used on not so powerful machines that do not posses great computing powers and big volumes of memory. While firstly created b Guolin Ke it was later incorporated as a Microsofts project. It's approach to growing the decisions trees is also different that of most of its competitors - growing trees leaf-wise instead of tree-level-wise. It assumes that this approach usually yield the largest decrease in loss. Thanks to all these traits this library is very versatile and can be used almost anywhere and also it is great for quick prototyping and experimenting. 
 
 \subsubsection{CatBoost}
 
-Another framework is CatBoost. It is newer than the former as it was first launched at the middle of the year 2017. While not that popular as other solutions it is certainly very interesting and powerful. It is successfully used in such applications as recommender systems, personal assistants, self-driving cars, weather prediction and others. What is most remarkable in it is that it support GPU computing which greatly enhances the speed of training and also enables possibility for creating more complex models on more complex data. It also has built in visualization tools that make it easy to understand some insights that can be drawn from the training process and also to make tuning the algorithm easier. It also natively supports some preprocessing features like encoding categorical variables and missing values.
+Another framework is CatBoost\cite{prokhorenkova2018catboost}. It is newer than the former as it was first launched at the middle of the year 2017. While not that popular as other solutions it is certainly very interesting and powerful. It is successfully used in such applications as recommender systems, personal assistants, self-driving cars, weather prediction and others. What is most remarkable in it is that it support GPU computing which greatly enhances the speed of training and also enables possibility for creating more complex models on more complex data. It also has built in visualization tools that make it easy to understand some insights that can be drawn from the training process and also to make tuning the algorithm easier. It also natively supports some preprocessing features like encoding categorical variables and missing values.
 
 \subsection{Why gradient boosting?}
 
@@ -452,7 +443,7 @@ The choice of gradient boosting instead of other popular classification methods 
 It being tree-based also helps in model explainability which helps in turn optimization procedure. The fact that the model can then be interpreted by human more easily makes Auto-ML solutions more suitable for further improvements as it is easier to understand models drawbacks and fix them.
 
 
-\section{Data preprocessing}
+\section{Data preprocessing problem}
 
 Before classification model can be trained, often the necessary step is to firstly preprocess it. Term preprocessing means performing transformations of the data such that machine learning model of our choice can actually interpret and learn from it. Some of the most important will be now discused.
 
@@ -461,7 +452,7 @@ Before classification model can be trained, often the necessary step is to first
 Datasets are often incomplete. There are many reasons for that. Depending on the nature of the data, or the process that generated it, the cause for that may be different. There are many ways this problem can be addressed and different approaches are suitable in different situations.
 There are three main ways missing values can be handled. First one is just throwing away part of the data that is missing. It can be done in one of the two ways. First is often used when some feature has mostly missing values. In such a situation one can just delete it entirely from dataset. The other situation is often practised when there is not many of missing values of some feature. In such a situation the entries with undefined value for the feature can be deleted. This approach however deletes some potentially important information given by other features.
 Another way to treat missing values is to impute them. Imputing means setting them to some values. Most popular approaches include for example setting them to most frequent value for the feature, or if the values are numerical - to mean or median. This approaches however can increase the bias in the data, especially if percentage of missing values is high. 
-The are also some more complicated and smarter ways of imputing values like Iterative Imputation, KNN Imputation or SMOTE[DODAĆ LINKI]. However their mechanisms of work will are out of scope of this thesis.
+The are also some more complicated and smarter ways of imputing values like Iterative Imputation\cite{liu2013comparison} or KNN Imputation\cite{beretta2016nearest}. However their mechanisms of work will are out of scope of this thesis.
 What is important however is that each of these methods, simple or not, have its advantages and disadvantages and choosing right one is more often matter of experimenting rather than anything else.
 The last method that will be discussed here is missing values encoding. This is the easiest method and it also is very effective in many cases. If the feature having missing values is nominal, or in other words, categorical what can be done is introducing new class indicating that value is missing. In such a scenario if there is binary "sick" feature in the dataset the category of "not known" can be added thus making the feature taking three possible values instead of two. If the data is numerical missing values can be set to zero and additional binary feature called indicator variable can be added to dataset, telling if there was a missing value in given entry for the feature or not.
 
@@ -470,27 +461,28 @@ The last method that will be discussed here is missing values encoding. This is 
 Another necessary step for most of the cases is so called feature encoding. While humans are capable of processing words computers are not. Because of that every feature in our dataset that is represented in for of the text has to be encoded somehow - which basically means represented by numbers.
 There are many ways to do it - again the correct method depends on the data and it's nature. 
 In this thesis only some of them with limited explanations will be covered as the topic is very broad.
-The most natural way is to just assign a fixed number for each different value the feature can take. For example if the "sick" variable could take values "YES" and "NO" then they could just be assigned to "1" and "0" respectively. This approach however very often is wrong. The problem arises when the number of possible values the feature can take is bigger than two. Encoding them in such a way in this case often could mean creating artifical order that does not exist but model would interpret the data in the way that it does exist. For example if there would be "color" feauture in the data taking values "RED", "GREEN" and "BLUE" encoding them to "0", "1" and "2" would create false relationship of BLUE being somehow more different, or "bigger" in respect to "RED" than "GREEN" is.
+The most natural way is to just assign a fixed number for each different value the feature can take. For example if the "sick" variable could take values "YES" and "NO" then they could just be assigned to "1" and "0" respectively. This approach however very often is wrong. The problem arises when the number of possible values the feature can take is bigger than two. Encoding them in such a way in this case often could mean creating artificial order that does not exist but model would interpret the data in the way that it does exist. For example if there would be "color" feature in the data taking values "RED", "GREEN" and "BLUE" encoding them to "0", "1" and "2" would create false relationship of BLUE being somehow more different, or "bigger" in respect to "RED" than "GREEN" is.
 In such a case most often used method is so called one-hot encoding. 
-The method consists of replacing given feature with n indicator variables for each possible value of the feature. What is important however that in case of such encoding the problem known as perfect multicollinearity [https://en.wikipedia.org/wiki/Multicollinearity] arises. It can be easly solved however by just discarding one of the created indicator variables. This approach potentially can greatly increase number of features in dataset and potentially cause other problems.
+The method consists of replacing given feature with n indicator variables for each possible value of the feature. What is important however that in case of such encoding the problem known as perfect multicollinearity\cite{alin2010multicollinearity} arises. It can be easly solved however by just discarding one of the created indicator variables. This approach potentially can greatly increase number of features in dataset and potentially cause other problems.
 Last method that will be covered here is target encoding where the values are set to average of the target value for given category. This approach is easy to implement and often gives good results but increase the risk of overfitting to the training data.
 
 \subsection{Outlier treatment}
 
 The last important topic that needs to be addressed is outlier treatment. It is often the case that the dataset will contain entries that differ significantly from other observations. Such a big difference can happen in features, target or both. It is often hard to tell what is the cause of its existence, it may be error of measurement or some actual important cause. What is important is that some models are very sensitive to outliers and tree-based methods are one of them. Trying to account for outliers can reduce performance of the model on majority of observations. Therefore outliers need special treatment.
-As with missing values we can delete them or impute them if it seems reasonable. This however deletes the information the can be carried by outlier. If it is assumed that outlier may be natural it can also be treated seperately as whole different problem, by new model that can then be combined with the model for "usual" observations to achieve better results.
+As with missing values we can delete them or impute them if it seems reasonable. This however deletes the information the can be carried by outlier. If it is assumed that outlier may be natural it can also be treated separately as whole different problem, by new model that can then be combined with the model for "usual" observations to achieve better results.
 There are many methods for determining whether an observation is outlier or not, most of them are based on statistical methods like computing z-scores of observations. 
-Finding and treating outliers correctly can be big part of the model working well or bad and thus it should never be omitted, especially in cases when machine learning model is sensitive to them.
+Finding and treating outliers correctly can be big part of the model working well or bad and thus it should never be omitted, especially in cases when machine learning model is sensitive to them. Example of such situation can be seen in the figure \ref{fig:outlier}
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[scale=1]{outlier.jpg}
+    \setcaptioncitation{\url{https://cutt.ly/njfIUKa}}
     \caption{Linear regression is a model sensitive to outliers.}
-    \label{fig:mesh1}
+    \label{fig:outlier}
 \end{figure}
 
 
-https://www.theanalysisfactor.com/outliers-to-drop-or-not-to-drop/
+
 
 
 \subsection{Other data processing steps}
@@ -498,10 +490,70 @@ https://www.theanalysisfactor.com/outliers-to-drop-or-not-to-drop/
 There are also other things that can be done with data to increase model performance. Some algorithms benefit from scaling and transforming numerical values so that they fall in specific range or follow specific distribution. Sometimes new variables can be created on the base of others. This process named feature engineering requires some creativity and often also domain knowledge. Sometimes artificially creating more observations can help, this process is called data augmentation. It is hard if possible at all to name all things that can be tried and that potentially can help. Experimenting and getting experience is good chunk of knowing what to do, but the before mentioned steps are most necessary to make model work at all and are the challenge that the solution implemented as the subject of this thesis is concentrated to solve.
 
 
-\section{Model optimization}
+\section{Model optimization problem}
 
 After preprocessing procedure model can be trained. Most of the algorithms do have some default settings. Ones used in this thesis are not exception. However as was stated many times before the process of model optimization doesn't end in optimization of its parameters. Before the model is trained it has to be set up to work in specific way and this settings called hyperparameters also have to be optimized. Gradient boosting models while powerful are rather difficult to optimize in terms of their settings. That's why most people just stay with default parameters or try and fail with changing them.
 That's why the auto-ml solution that is being proposed in this thesis heavily focuses on automating this process.
+
+\subsection{Classification metrics}
+To asses how well model is performing the mathematical method for measuring it has to be created.
+Such a method or methods are called metrics and they are used just for that.
+In this thesis 2 specific metrics are used, second one being calculated with another two. Formulas and explanations will be now shortly visited.
+
+\subsubsection{Accuracy}
+This is the easiest metric that can be used. It measures how many examples were correctly classified out of all examples provided.
+Thus the formula looks as follows:
+
+\begin{equation}
+Accuracy = \frac{Correctly Classified}{Correcly Classified + IncorrectlyClassified}
+\end{equation}
+
+
+\subsubsection{Precision and Recall}
+
+These two metrics are good for measuring how algorithm performs when the number of entries for each class highly varies. For these formulas it is useful to introduce following:
+\newline
+\newline
+TP -- True positive rate -- fraction of correctly classified positive examples
+\newline
+TN -- True negative rate -- fraction of correctly classified negative examples
+\newline
+FP -- False positive rate -- fraction of incorrectly classified positive examples
+\newline
+FN -- False negative rate -- fraction of incorrectly classified negative examples
+\newline
+\newline
+
+Then the formulas for precision are as follows:
+
+\begin{equation}
+Precision = \frac{TP}{TP + FP}
+\end{equation}
+
+\begin{equation}
+Recall = \frac{TP}{TP + FN}
+\end{equation}
+
+These formulas however work only for binary classification purposes. In case of problems with multiple classes the formulas have to be restructured. Method used in this project is so called \emph{macro-averaging}.
+\newline
+Macro-average precision score can be defined as the arithmetic mean of all the precision scores of different classes. Mathematically it can be defined in such a way:
+\begin{equation}
+Precision_{macro} = \frac{P_{class1} + P_{class2} + ... + P_{classn}}{n}
+\end{equation}
+Where $P_{classi}$ is precision calculated for $ith$ class.
+\newline
+Macro-average recall score can be defined as the arithmetic mean of all the recall scores of different classes. Mathematically it can be defined in such a way:
+\begin{equation}
+Recall_{macro} = \frac{R_{class1} + R_{class2} + ... + R_{classn}}{n}
+\end{equation}
+Where $R_{classi}$ is recall calculated for $ith$ class.
+\subsubsection{F1-Score}
+
+F1-score is a metric that is used to somehow average the Precision and Recall and provide a more balanced measure. This, along with accuracy, is a metric that is mostly used in this thesis. The formula for the F1-score presents itself as follows:
+
+\begin{equation}
+F1\mbox{-}score = 2 * \frac{Precision * Recall}{Precision + Recall}
+\end{equation}
 
 \subsection{Cross-Validation}
 
@@ -516,15 +568,36 @@ Knowing that performance it is then possible to try different approaches to data
 
 \subsection{Grid and Randomized Search}
 
-To optimize hyperparameters of the model one can choose different approaches. The most commonly used are naive approaches like Grid Search and Randomized Search.
+To optimize hyperparameters of the model one can choose different approaches. The most commonly used are naive approaches like \emph{Grid Search and Randomized Search}\cite{bergstra2012random}.
 These approaches are very similar and at first require the user to specify all values that they want to be tested. That's the first drawback of the method as it is easy to miss some possibly good options. It also enforces user to at least partially know what values may be a good fit.
+Then the combinations of values provided options are tested. In case of Grid Search each combination is being tested. In case of Randomized Search random values are picked selected number of times.
+This approach is an example of exhaustive search approach. It may be very slow and lives only in scope of specifically provided options. 
+It is however very easy to implement and if the user actually knows which values are likely to be correct and all they want is to check which one is best then this approach may be the best.
+It isn't however the best option for auto-ml solution that's why the work that is created here relies more on different approach.
+
 
 \subsection{Bayesian Optimization}
 
-
+Bayesian optimization\cite{snoek2012practical} is a probabilistic approach that is usually used for hyperparameter tuning. While the exact implementation and math that stays behind it are rather complex it is rather easy to understand the basic idea.
+At first users has to provide ranges that hyperparametrs can take. This is already a big improvement from exhaustive search approaches as the specific values do not have to be specified. All what is needed are boundaries.
+Then the algorithm tries to model the accuracy (or error) as a function of hyperparameters in space provided by the user. This function is in practise usually modeled using probabilistic model known as \emph{Gaussian process}\cite{mackay1998introduction}.
+As the real function is not known the algorithm tries to estimate it. Such an estimate is called a surrogate function and the goal is to maximize the probability the the surrogate function is as close to be real as possible.
+At first a random guess is being taken and the model performance is being evaluated. Based on it another hyperparameter values are chosen, model is again evaluated and this process is repeated selected number of times or until there is no noticable improvement between experiments.
+There are different methods for choosing the hyperparameter values and they are called acquisition functions.
+Most common used once are probability of improvement and expected improvement. 
+The first one chooses the values that the model thinks are most likely to give the improved result. The latter picks values that it thinks will give the biggest improvement but doesn't focus on specific probability of getting it.
+Such method is much more intelligent and reliable than exhaustive approaches. However it has a main drawback that is the fact that it is not that easy to make use of parallel computing as the sequential choices depend on each other. 
+This was not the case in grid and randomized searches as they values to be checked are known in advance and experiments can be easily performed simultaneously.
 
 \section{Existing Auto-ML tools}
 
+There is a fair number of Auto-ML tools that are already available on the market. All of them have their strengths and weaknesses. Some of them will be now shortly introduce to show why the solution provided here has a place in the world of already existing solutions.
+In general they can be divided to two categories. First being the tools available as the cloud service, second being tools for programmers in a form of for example libraries.
+Biggest players in the cloud service market provided their own solutions to be alternative to the standard process of data preprocessing and model selection.
+Among these are products like Google Auto-ML Tables, Azure Auto-ML and Amazon Sagemaker. The first one is targeted for users that do have a problem to solve but do not have a skillset needed to do it. The second one is targeted to engineers that do have some knowledge and want to make it easier for them to prepare good models. It's default user experience is based on jupyter notebook ecosystem so programming knowledge is required. The last one also targets engineers but it requires some knowledge about AWS platform to use successfully. All these tools are however rather pricey and very in-house-platform focused which means that it is much harder to deploy models created by them outside their specific ecosystem.
+As for the tools in form of software library among the most popular ones are AutoSklearn and TPOT.
+The first one is the easiest choice for most applications as it is built into Sklearn library. However it has very limited capabilities and can't really be configured in any way. 
+Another one, TPOT, is interesting library as it relies on genetic programming to optimize model parameters. It yields promising results but also is very slow because of it's genetic approach. What is actually very useful in this product is that it generates python code that replicates result so it is easy to analyse the steps. 
 
 \chapter{Requirements and tools}
 
@@ -535,143 +608,366 @@ These approaches are very similar and at first require the user to specify all v
 \item methodology of design and implementation
 \end{itemize}
 
+The tool that is the subject of the thesis should meet the following set of requirements.
 
-\chapter{External specification}
+
+\section{Requirements and use cases}
+
+\subsubsection{Functional requirements:}
+
 \begin{itemize}
-\item hardware and software requirements
-\item installation procedure
-\item activation procedure
-\item types of users
-\item user manual
-\item system administration
-\item security issues
-\item example of usage
-\item working scenarios (with screenshots or output files)
+    \item The tool should be available both as the python library to be used in code as well as in the form of the web application.
+    \item User should be granted the possibility to choose maximum number of iterations that algorithm can perform to limit the time it takes to get results.
+    \item The tool should accept data in form of .csv files. 
+    \item Optimized machine learning model should be possible to be easy downloaded in pickle format.
+\end{itemize}
+\subsubsection{Non-functional requirements:}
+\begin{itemize}
+    \item The tool should support the latest python version that also supports libraries that it is dependent on.
+    \item The tool should work on most popular operating system like Windows, Linux and MacOS.
+    \item The interface of web application should be designed in a way that it provides good user experience for both desktop computers and mobile devices.
+    \item Good documentation of the tool should be provided to make it easy to pick-up the tool.
 \end{itemize}
 
-\begin{figure}
-\centering
-\begin{tikzpicture}
-\begin{axis}[
-    y tick label style={
-        /pgf/number format/.cd,
-            fixed,
-            fixed zerofill, % 1.0 instead of 1
-            precision=1,
-        /tikz/.cd
-    },
-    x tick label style={
-        /pgf/number format/.cd,
-            fixed,
-            fixed zerofill,
-            precision=2,
-        /tikz/.cd
-    }
-]
-\addplot [domain=0.0:0.1] {rnd};
-\end{axis}
-\end{tikzpicture}
-\caption{A caption of a figure is \textbf{below} it.}
-\label{fig:2}
+The following use-case diagram illustrates the possible usages of the system.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{Diagramik.png}
+    \caption{Use case diagram}
+    \label{fig:mesh1}
 \end{figure}
 
+\section{Tools used}
+
+Following tools were useful while creating the product. 
+
+\subsection{Visual studio code}
+
+Visual Studio Code is a lightweight open source text editor made by Microsoft. Most of its functionalities comes from extensions that can be installed on demand by user. The most important features that it provided was support for python programming language in form of syntax highlithing, intellisense and debugger.
+
+
+\subsection{Jupyter notebook}
+
+Jupyter notebook is a very popular tool among machine learning engineers and reasearchers. It's a enviroment for running python code where user can split the code into cells that can be run individually. The state of each cell and variables it initialized and changed are remembered individually. Therefore it is not necessary to run whole code top-down after minor changes which is especially useful when working with big datasets and chunks of code that take long time to run.
+The solution also helps to make code and experiments more readable as it supports REPL and markdown rendering.
+
+\subsection{Git and GitHub}
+
+As the version control tool the most popular git was chosen while for the platform where the code was hosted online github was chosen. These solutions were very useful to keep track of changes that were made long time ago as the project is rather big. Also the version control was especially useful in case of this project as it was co-created with another person.
+
+
+\section{Existing packages used}
+
+
+\subsection{Numpy and Pandas}
+
+Numpy and pandas that is built on top of numpy are popular python libararies for data manipulation.
+They were used to load and store the data firstly provided in form of .csv files as well as formatting it to form useful for processing and training machine learning models.
+
+\subsection{Scikit-learn}
+
+Scikit-learn of sklearn is most popular machine learning package for python. It provides massive amount of tools for data processing as well as for model selection and validation.
+In this thesis almost all data processing is done with this library as well as cross-validation. The complete list of solutions it provides that was used in this thesis consists of:
+
+\subsection{Category Encoders}
+
+Category encoders is open-source python library following sklearn style guidelines and aiming for extending existing sklearn functionalities in term of encoding categorical features.
+It provides implementation for less common but very powerful solution for encoding of nominal variables.
+These implementations are used in this thesis to provide an alternative for typical methods like one-hot encoding, which sometimes gives better results.
+
+\subsection{Gradient boosting libraries}
+
+Python implementations of popular gradient boosting libraries, namely \emph{XGBoost}, \emph{CatBoost} and \emph{LightGBM} were used in this thesis as a basis of modeling methods for the auto-ml solution.
+
+
+
+\subsection{Scikit-optimize}
+
+Scikit-optimze is another open-source python library following sklearn style guidelines and aiming for extending its functionality. It provides implementation for more complicated model optimization techniques.
+In case of this thesis - the implementation of bayesian optimization algorithm provided by it was used as a bulding block for hyperparameter search functionality of the solution. 
+
+\subsection{Hyperopt}
+
+Hyperopt is a Python library for serial and parallel optimization. It is most popular tool in that domain and is used as a alternative option for scikit-optimize. It is however more of a second choice solution as it is much simpler to incorporate the latter to the automatic system that was the subject of the thesis.
+
+\subsection{Streamlit}
+
+Streamlit is a python library that makes it very easy to deploy data science applications. It provides easy tools for creating applications in form of a interactive dashboards. It is has some limitation in terms of features provided. However it was not an obstacle in implementing GUI of the created system. 
+
+
+
+\chapter{External specification}
+
+\section{Hardware and software requirements}
+
+
+Hardware and software requirements are very low for this framework. What is needed is a operating system supporting python programming language in version 3.8.x and computer with x86 64-bit CPU of Intel or AMD architecture. Framework was not tested on other workstations however it is possible that it may work on them too.
+Such limitations make it possible to use it on almost any hardware, size of datasets however have to be taken into account.
+
+\section{Installation procedure}
+
+Installation procedure may be different in the future. Up-to-date installation instruction can be found on github.
+
+\subsection{Obtaining framework from github}
+
+The project repository can be found under the following link: \url{https://github.com/CoInitialized/Ember}
+There are two ways to obrain latest version of library.
+\subsubsection{Cloning git repository}
+If git version control is installed on the system the easiest way is to run the following command through CLI:
+\begin{verbatim}
+git clone https://github.com/CoInitialized/Ember.git
+\end{verbatim}
+The most recent verion of library should be then downloaded to current working directory.
+\subsubsection{Direct download}
+It is also possible to download zip package directly from github.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.6]{github.PNG}
+    \caption{Direct download}
+    \label{fig:mesh1}
+\end{figure}
+
+The package can then be extracted in the directory of choice.
+
+
+\subsection{Setting up virtual environment}
+
+To be able to use library python and python package manager (pip) are needed.
+Python can be obtained from \url{https://www.python.org/downloads/}. 
+Other, and maybe more convenient way is to install Anaconda or Miniconda which are python distributions especially suited for data science purposes and they also come with the conda package manager and the conda environments that make it easy to manage dependencies. They can be found at: 
+\url{https://www.anaconda.com/}
+
+\subsection{Installing dependencies}
+
+If anaconda distribution was installed the easiest way to install required dependencies is to create conda environment with the help of the $.yml$ file provided in repository. All that is needed to be done is to execute command \ref{lst:env_create} in console.
+
+\begin{lstlisting}[language=bash,caption={installation of anaconda environment from console}, label={lst:env_create}]
+conda env create -f environment.yml
+\end{lstlisting}
+
+Alternatively all dependencies can be installed via pip with command \ref{lst:pip_install}.  
+
+\begin{lstlisting}[language=bash,caption={installation with pip}, label={lst:pip_install}]
+pip install -r requirements.txt
+\end{lstlisting}
+
+However good idea would be to do it inside virtual environment. The instructions for setting up virtual environment can be found at \url{https://docs.python.org/3/tutorial/venv.html}
+
+\section{Usage methods}
+
+\subsection{Web Mode}
+
+In order to run application in web mode user has to create local server by running command \ref{lst:starting_command} in shell:
+
+\begin{lstlisting}[language=bash,caption={Running streamlit app}
+\label{lst:starting_command}
+]
+streamlit run streamlit_app.py
+\end{lstlisting}
+
+Then the web browser should automatically launch GUI. If not then going to the adress: \url{http://localhost:8501/} should be sufficient.
+
+The application should welcome user with the screen similar to the one presented in the figure \ref{fig:welcome}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{welcome.png}
+    \caption{Welcome screen}
+    \label{fig:welcome}
+\end{figure}
+
+Next we set the objective to classification and include some more iterations to reduce the chance of under-fitting the model. Result should look similar to the one presented in the figure \ref{fig:set}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{set.png}
+    \caption{Choosing options}
+    \label{fig:set}
+\end{figure}
+
+Then after clicking browse files the following window of file choice appears. It should resemble figure \ref{fig:select}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{select.png}
+    \caption{Choosing file}
+    \label{fig:select}
+\end{figure}
+
+After that step first few rows of the dataset will be displayed. Example is shown at the figure \ref{fig:header}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{header.png}
+    \caption{Dataset header}
+    \label{fig:header}
+\end{figure}
+
+Finally after clicking "Start training" button the optimization process will begin. After some time results can be observed on the graph showing how each boosting algorithm was optimized. Example graph can be observed at the figure \ref{fig:wykres}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{Wykres.png}
+    \caption{Training results}
+    \label{fig:wykres}
+\end{figure}
+
+Under it the graph of feature importance's can be seen. Example of it can be observed at the figure \ref{fig:feature} 
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.8]{Feature.png}
+    \caption{Training results}
+    \label{fig:feature}
+\end{figure}
+
+
+Below the graph button allowing user to download the model as pickle file is present.
+
+The early stopping procedure helps to stop training the model if it does not make any improvements. If the user has more resources at their disposal and wishes to wait for potentially longer time this method may be good choice. Example of the training graph in such a case can be seen at figure \ref{fig:early}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=0.6]{Wykres2.png}
+    \caption{Early stopping}
+    \label{fig:early}
+\end{figure}
+
+\subsection{AutoML library}
+
+The library is also equipped with fully automated $Learner$ class. It can be easly integrated into existing code and offers more customization options. Example usage of it is shown below:
+
+\begin{lstlisting}[language=Python,caption={Importing necessary libraries}]
+from ember.autolearn import Learner
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python,caption={Loading the dataset}]
+dataset_classification = r'datasets\classification\audiology.csv'
+data = pd.read_csv(dataset_classification)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python,caption={Dividing dataset to train and test subsets}]
+X, y = data.drop(columns = ['class']), data['class']
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state = 42, test_size = 20)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python,caption={Model training with classification objective}]
+learner = Learner(objective='classification', X = X_train, y = y_train)
+learner.fit(cv = 5, optimizer = 'bayes', cat=False, speed=100)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python,caption={Computing metrics}]
+results = learner.predict(X_test)
+print(accuracy_score(y_test, results))
+\end{lstlisting}
+
+\subsection{Pipeline steps library}
+
+The last method of usage is by the single sub-modules allowing for bulding machine learning pipelines in simple but higly customizable way.
+Example usage can be found here:
+
+\subsubsection{Building pipeline with submodules}
+\lstinputlisting[language = Python]{example_1.py}
 
 \chapter{Internal specification}
 
+\section{Concept of the system}
+
+The concept of the system is to build the product that can be used both in form of the library and web application. Machine learning solutions are become more and more popular and big goal of the project is to make it accesible to people on all levels of experitse. 
+Because of that simple web application is availble where the user can simply put their data and start training model. On the other hand person with some programming knowledge can include automatic learner library to make more customizable model and if one has even more knowledge and skill then they can use specific sub-modules for enhancing their workflow.
+
+\section{Class structure and resume of important classes}
+
+The system consists of 11 main classes that are responsible for the work of the entire system. 
+
 \begin{itemize}
-\item concept of the system
-\item system architecture
-\item description of data structures (and data bases)
-\item components, modules, libraries, resume of important classes (if used)
-\item resume of important algorithms (if used)
-\item details of implementation of selected parts
-\item applied design patterns
-\item UML diagrams
+    \item \textbf{Preprocessor -} This is the most important class for preprocessing steps. It is used to connect individual data transformers to one pipeline. It has simple interface allowing for quick pipeline ensebling.
+    
+    \item \textbf{Dtype selector - } This Class performs selection of given data type. Can be used with $preprocessor$ to create indivudual transformation pipelines for different data types.
+    
+    \item \textbf{Fraction Selector -}  Transformer selecting and returning only columns having less than specified percentage of missing values. Useful for preventing overfitting by imputation and high dimentionality. Can be used with $Preprocessor$ to easily incorporate it to pipeline.
+    
+    \item \textbf{General imputer -} This class provides simple interface for missing data imputation. It allows to perform it with many different methods like \emph{mean/mode imputation} or {KNN imputation}. Can be used with $Preprocessor$ to easily incorporate it to pipeline.
+    
+    \item \textbf{GeneralScaler -}  This class provides simple interface for numerical data scaling and normalization. Can be used with $Preprocessor$ to easily incorporate it to pipeline.
+    
+    \item \textbf{MultiColumnTransformer -}  General transformer class for many columns. Used to fit the same transformer for each individual column.
+    
+    \item \textbf{General Encoder -}  This class provides simple interface for categorical data encoding. It allows to perform it with many different methods like \emph{one-hot encoding}, {target encoding} or {leave-one-out encoding}. Can be used with $Preprocessor$ to easily incorporate it to pipeline.
+    
+    \item \textbf{Selector -}  Abstract class for model hyperparameter optimization, implementing basic functions like $predict$ or $score$
+    
+    \item \textbf{GridSelector -}  Class made for model selection based on grid search and cross validation
+    
+    \item \textbf{BayesSelector -}  Class made for model selection based on bayesian optimization and cross validation
 \end{itemize}
 
+\section{AutoML pipeline steps implementation}
+Automatic learner class created for this project performs both data processing and model optimization steps. The steps performed in both cases will be now shortly explained.
+\subsection{Data preprocessing}
+Data preprocessing is started by dropping the columns with big chunk of missing entries. Be default it is set to 80 percent. This process can be stopped on demand or restricted to only some columns if user believes that missing values at some columns should be specifically indicated. In this case indicator variables are created for missing values.
+The next step is missing values imputation. By default it is performed with $mean/mode$ imputation. This method can also be chosen to other by user. It also can be automatically selected individually for each feature by automatic experiments but it greatly extends runtime.
+Then categorical values are encoded. By defualt it is performed with target encoding but user can specify other method. It also can be automatically selected individually for each feature by automatic experiments but it greatly extends runtime.
 
-Use special environment for inline code, eg \lstinline|descriptor| or \lstinline|descriptor_gaussian|.
-Longer parts of code put in the figure environment, eg. code in Fig. \ref{fig:pseudokod}. Very long listings–move to an appendix.
+\subsection{Model optimization}
 
-\begin{figure}
-\centering
-\begin{lstlisting}
-class descriptor_gaussian : virtual public descriptor
-{
-   protected:
-      /** core of the gaussian fuzzy set */
-      double _mean;
-      /** fuzzyfication of the gaussian fuzzy set */
-      double _stddev;
-
-   public:
-      /** @param mean core of the set
-          @param stddev standard deviation */
-      descriptor_gaussian (double mean, double stddev);
-      descriptor_gaussian (const descriptor_gaussian & w);
-      virtual ~descriptor_gaussian();
-      virtual descriptor * clone () const;
-
-      /** The method elaborates membership to the gaussian fuzzy set. */
-      virtual double getMembership (double x) const;
-
-};
-\end{lstlisting}
-\caption{The \lstinline|descriptor_gaussian| class.}
-\label{fig:pseudokod}
-\end{figure}
-
+Model optimization can be performed with either bayesian optimization or grid selection. By default beysian optimization is performed with the help of scikit-optimize package implementing the optimization algorithm with gaussian processes. 
+User can change it to bayesian optimization with hyperopt engine for optimization (based on tree parzen estimation method) or grid selection.
 
 \chapter{Verification and validation}
-\begin{itemize}
-\item testing paradigm (eg V model)
-\item test cases, testing scope (full / partial)
-\item detected and fixed bugs
-\item results of experiments (optional)
-\end{itemize}
 
 
+As the main goal of the project was to prepare python module that would optimize commonly used gradient boosting framework the testing part focused on running it on some benchmark classification datasets.
+Data was preprocessed using preprocessing modules created as the part of the library and then LightGBM, XGBoost and Catboost models were trained on default parameters. Along them optimization procedure was run based on grid approach and bayesian optimization with hyperopt and skopt engines.
+Results on the first 20 of benchmark datasets can be found at table  \ref{tab:benchmarki}. Each entry shows achieved test accuracy for given dataset with given method. Accuracy of $1$ means perfect accuracy where accuracy of $0$ means no correct classification.
 
-
-\chapter{Conclusions}
-\begin{itemize}
-\item achieved results with regard to objectives of the thesis and requirements
-\item path of further development (eg functional extension …)
-\item encountered difficulties and problems
-\end{itemize}
-
-
-\begin{table}
-\centering
-\caption{A caption of a table is \textbf{above} it.}
-\label{id:tab:wyniki}
-\begin{tabular}{rrrrrrrr}
+\begin{table}[t]
+\begin{tabular}{lllllll}
 \toprule
-	         &                                     \multicolumn{7}{c}{method}                                      \\
-	         \cmidrule{2-8}
-	         &         &         &        \multicolumn{3}{c}{alg. 3}        & \multicolumn{2}{c}{alg. 4, $\gamma = 2$} \\
-	         \cmidrule(r){4-6}\cmidrule(r){7-8}
-	$\zeta$ &     alg. 1 &   alg. 2 & $\alpha= 1.5$ & $\alpha= 2$ & $\alpha= 3$ &   $\beta = 0.1$  &   $\beta = -0.1$ \\
+{} &  LGBM &   XGB &   CAT &  GRID & HYPEROPT & SKOPT \\
 \midrule
-	       0 &  8.3250 & 1.45305 &       7.5791 &    14.8517 &    20.0028 & 1.16396 &                       1.1365 \\
-	       5 &  0.6111 & 2.27126 &       6.9952 &    13.8560 &    18.6064 & 1.18659 &                       1.1630 \\
-	      10 & 11.6126 & 2.69218 &       6.2520 &    12.5202 &    16.8278 & 1.23180 &                       1.2045 \\
-	      15 &  0.5665 & 2.95046 &       5.7753 &    11.4588 &    15.4837 & 1.25131 &                       1.2614 \\
-	      20 & 15.8728 & 3.07225 &       5.3071 &    10.3935 &    13.8738 & 1.25307 &                       1.2217 \\
-	      25 &  0.9791 & 3.19034 &       5.4575 &     9.9533 &    13.0721 & 1.27104 &                       1.2640 \\
-	      30 &  2.0228 & 3.27474 &       5.7461 &     9.7164 &    12.2637 & 1.33404 &                       1.3209 \\
-	      35 & 13.4210 & 3.36086 &       6.6735 &    10.0442 &    12.0270 & 1.35385 &                       1.3059 \\
-	      40 & 13.2226 & 3.36420 &       7.7248 &    10.4495 &    12.0379 & 1.34919 &                       1.2768 \\
-	      45 & 12.8445 & 3.47436 &       8.5539 &    10.8552 &    12.2773 & 1.42303 &                       1.4362 \\
-	      50 & 12.9245 & 3.58228 &       9.2702 &    11.2183 &    12.3990 & 1.40922 &                       1.3724 \\
+anneal.csv               &  0.99 &     1 &     1 &     1 &        1 &     1 \\
+auto-mpg.csv             &  0.86 &  0.88 &   0.9 &  0.86 &      0.9 &   0.9 \\
+balance-scale.csv        &  0.86 &  0.85 &  0.89 &  0.89 &     0.92 &  0.91 \\
+breast-cancer.csv        &  0.72 &  0.72 &  0.81 &  0.81 &     0.81 &   0.9 \\
+breast-w.csv             &  0.96 &  0.95 &  0.97 &  0.98 &     0.97 &  0.98 \\
+bupa-liver-disorders.csv &  0.77 &  0.81 &  0.78 &  0.75 &     0.78 &  0.86 \\
+car.csv                  &  0.99 &  0.98 &  0.97 &     1 &        1 &     1 \\
+cleveland.csv            &  0.46 &  0.48 &  0.48 &  0.56 &     0.56 &  0.59 \\
+contact-lenses.csv       &   0.8 &   0.8 &     1 &     1 &        1 &     1 \\
+credit-a.csv             &  0.83 &  0.82 &  0.86 &  0.86 &     0.86 &  0.89 \\
+credit-g.csv             &  0.81 &  0.78 &  0.81 &  0.79 &      0.8 &  0.83 \\
+cylinder-bands.csv       &  0.83 &  0.81 &  0.82 &   0.8 &     0.84 &  0.86 \\
+diabetes.csv             &   0.7 &  0.69 &  0.75 &  0.76 &     0.77 &  0.82 \\
+echocardiogram.csv       &  0.81 &  0.81 &  0.81 &  0.81 &     0.85 &  0.81 \\
+ecoli.csv                &  0.88 &  0.88 &  0.91 &  0.88 &     0.89 &  0.91 \\
+flag.csv                 &  0.59 &  0.64 &  0.59 &  0.67 &     0.69 &  0.74 \\
+glass.csv                &   0.7 &  0.74 &  0.84 &  0.77 &     0.86 &  0.91 \\
+hayes-roth.csv           &  0.52 &  0.74 &  0.59 &  0.74 &     0.78 &  0.78 \\
+heart-c.csv              &  0.85 &  0.84 &  0.84 &  0.84 &     0.87 &  0.89 \\
+heart-statlog.csv        &  0.83 &  0.81 &  0.91 &  0.83 &     0.93 &  0.91 \\
 \bottomrule
 \end{tabular}
+\caption{Accuracy on benchmark datasets}
+\label{tab:benchmarki}
 \end{table}
 
+\chapter{Conclusions}
+Machine learning solutions based on gradient boosting are one of the best available. They are not well suited for unstructured data where deep neural networks usually perform best. However for the structured data they usually completely outperform other algorithms and they do not need huge data sets that is often the case with deep learning. The training time of these algorithms is also usually very reasonable. They are also much easier to interpret than other methods especially if used with tree-based models as in case of these project.
 
-
-
-
+During the development of  the project, all objectives of the thesis were realized. 
+In result fully functional library along with web interface, allowing for automatic creation of machine learning pipelines and model optimization were created.
+The methods used in development of this project are considered state-of-art and very modern. Thanks to that the project is much more likely to be useful and relevant for the long time.
+Thanks to clear documentation project is very suitable for further development and open-source friendly. Many performance tests were performed which gave many insights on how well the project performs and what can be optimized.
+Along with the tests many ideas for additional useful features came up. The library could definitely benefit from creating better tools for outlier detection and treatment. (TUTAJ JEST DOBRA BIBLIOTEKA I MAJA TEZ PUBLIKACJE https://github.com/yzhao062/pyod, ZACYTOWAC).
+It was also found that the models usually does not perform well on highly imbalanced datasets. In such a case it would be useful to incorporate some additional tools for oversampling (SMOTE ZACYTOWAC) or data augmentation (ZACYTOWAC).
+Overall project seems to have great potential and already performs much better than default algorithms. Its data preprocessing capabilities make it much easier to perform quick experiments that greatly reduces time for entry phase of the project. Model optimization capabilities make it much easier to select right model for the job. Because of the fact that choosing right model cannot be done in different way than by experimenting, automating this process at least to some extent is actually a very big deal.
+Summarizing the project is definitely useful which was proven experimentally. It can and definitely will be further developed.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \backmatter
